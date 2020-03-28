@@ -1,0 +1,26 @@
+input{
+    width:150px;
+    margin-right: 10px;
+    padding: 5px;
+    border: 2px solid blue;
+    border-radius: 10px;
+}
+input:focus{
+    border-color: darkblue;
+    outline: none;
+}
+input[type='submit']{
+    margin-right: 0;
+    width: 175px;
+    background-color: blue;
+    border-color: black;
+    color: white;
+}
+input[type='submit']:hover{
+    background-color: white;
+    border-color: blue;
+    color: blue;
+    cursor: pointer;
+    transition: 0.5s ease all;
+    user-focus: none;
+}
