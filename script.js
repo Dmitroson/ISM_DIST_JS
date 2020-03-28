@@ -64,7 +64,7 @@ function generateGameField() {
     gameParams = setGameParams();
     gameField.innerHTML = '';
 
-    if(gameParams.mines > gameParams.width * gameParams.height){
+    if (gameParams.mines > gameParams.width * gameParams.height){
         gameParams.mines = Math.round(gameParams.width * gameParams.height / 8);
         inputNumberOfMines.value = gameParams.mines.toString();
     }
@@ -86,6 +86,20 @@ function generateGameField() {
         }
     }
 
+    gameField.addEventListener('mouseover', function(event) {
+        let target = event.target;
+        if (target.tagName == 'TD') {
+            target.style.cursor = 'pointer';
+        }
+    });
+
+    gameField.addEventListener('mouseout', function(event) {
+        let target = event.target;
+        if (target.tagName == 'TD') {
+            target.style.cursor = '';
+        }
+    });
+
     gameField.addEventListener('click', openCellsListener = function (event) {
         let target = event.target;
         if(target.tagName == 'TD') {
@@ -104,6 +118,7 @@ function generateGameField() {
     gameField.addEventListener('contextmenu', flagMinesListener = function (event) {
         let target = event.target;
         if (target.tagName == 'TD') {
+            target.classList.toggle('isClicked');
             flagMines(target);
         }
     });
@@ -166,15 +181,14 @@ function checkCompletion() {
 }
 
 function flagMines(cell) {
-    if(cell.innerHTML == ""){
+    if(cell.className == 'isClicked'){
         cell.style.backgroundColor = '#31ff3c';
         cell.innerHTML = "!";
-        cell.dataset.mine = 'false';
     }
     else{
         cell.style.backgroundColor = '#fff359';
         cell.innerHTML = "";
-        cell.dataset.mine = 'true';
+
     }
 
     checkCompletion();
@@ -187,6 +201,7 @@ function openCell(cell) {
     }
     else {
         cell.style.backgroundColor = '#ff3226';
+        cell.style.transition = '0.5s ease all';
         let mineCount = 0;
         let cellRow = cell.parentNode.rowIndex;
         let cellCol = cell.cellIndex;
