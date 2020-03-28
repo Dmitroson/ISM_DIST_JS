@@ -169,7 +169,8 @@ function checkCompletion() {
     let isCompleted = true;
     for (let i = 0; i < gameParams.height; i++) {
         for (let j = 0; j < gameParams.width; j++) {
-            if ((gameField.rows[i].cells[j].dataset.mine != 'true') && (gameField.rows[i].cells[j].innerHTML == "")) {
+            if ((gameField.rows[i].cells[j].dataset.mine != 'true') &&
+                (!gameField.rows[i].cells[j].classList.contains('opened'))) {
                 isCompleted = false;
             }
         }
@@ -181,6 +182,10 @@ function checkCompletion() {
 }
 
 function flagMines(cell) {
+    if(cell.classList.contains('opened')) return;
+
+    cell.style.transition = '0.5s ease all';
+
     if(cell.className == 'isClicked'){
         cell.style.backgroundColor = '#31ff3c';
         cell.innerHTML = "!";
@@ -206,8 +211,8 @@ function openCell(cell) {
         let cellRow = cell.parentNode.rowIndex;
         let cellCol = cell.cellIndex;
 
-        for (let  i = Math.max(cellRow - 1, 0); i <= Math.min(cellRow + 1, 9); i++) {
-            for (let j = Math.max(cellCol - 1, 0); j <= Math.min(cellCol + 1, 9); j++) {
+        for (let  i = Math.max(cellRow - 1, 0); i <= Math.min(cellRow + 1, gameParams.height - 1); i++) {
+            for (let j = Math.max(cellCol - 1, 0); j <= Math.min(cellCol + 1, gameParams.width - 1); j++) {
                 if (gameField.rows[i].cells[j].dataset.mine == 'true') {
                     mineCount++;
                 }
@@ -218,14 +223,15 @@ function openCell(cell) {
 
         // Ищем все незаминированные соседние клетки
         if (mineCount == 0) {
-            for (let i = Math.max(cellRow - 1, 0); i <= Math.min(cellRow + 1, 9); i++) {
-                for(let j = Math.max(cellCol - 1, 0); j <= Math.min(cellCol + 1, 9); j++) {
+            for (let i = Math.max(cellRow - 1, 0); i <= Math.min(cellRow + 1, gameParams.height - 1); i++) {
+                for(let j = Math.max(cellCol - 1, 0); j <= Math.min(cellCol + 1, gameParams.width - 1); j++) {
                     if (gameField.rows[i].cells[j].innerHTML == "") {
                         openCell(gameField.rows[i].cells[j]);
                     }
                 }
             }
         }
+        cell.classList.toggle('opened');
         checkCompletion();
     }
 }
